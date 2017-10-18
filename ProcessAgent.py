@@ -76,7 +76,7 @@ class ProcessAgent(Process):
                     if np.random.rand()<0.0001:
                         print(acs, action_index, experiences[-1].prediction, r)
         action_sequence = ()
-        for t in reversed(range(0, len(experiences)-1)):
+        for t in reversed(range(0, len(experiences))):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
             action = experiences[t].action
             action_sequence = (action,) + action_sequence
@@ -87,7 +87,7 @@ class ProcessAgent(Process):
             uexp = UpdatedExperience(experiences[t].state, action_index, experiences[t].prediction, reward_sum)
             return_list.append(uexp)
             if np.random.rand() < 0.0001:
-                print(action_sequence, action_index, experiences[t].prediction, r)
+                print(action_sequence, action_index, experiences[t].prediction, reward_sum)
         return return_list
 
     def convert_data(self, updated_experiences):
