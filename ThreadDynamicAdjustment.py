@@ -87,7 +87,6 @@ class ThreadDynamicAdjustment(Thread):
 
     def run(self):
 
-        return
         self.enable_disable_components()
         self.update_stats()
 
