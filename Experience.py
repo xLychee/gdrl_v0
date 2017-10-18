@@ -31,3 +31,10 @@ class Experience:
         self.prediction = prediction
         self.reward = reward
         self.done = done
+
+class UpdatedExperience:
+    def __init__(self, state, action_index, prediction, reward):
+        self.state = state
+        self.action_index = action_index
+        self.prediction = prediction
+        self.reward = reward

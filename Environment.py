@@ -83,7 +83,7 @@ class Environment:
 
     def step(self, action):
         #####
-        action = Config.ACTION_INDEX_MAP[action][0]
+        #action = Config.ACTION_INDEX_MAP[action][0]
         #####
         observation, reward, done, _ = self.game.step(action)
 

@@ -45,7 +45,7 @@ class Server:
         self.training_q = Queue(maxsize=Config.MAX_QUEUE_SIZE)
         self.prediction_q = Queue(maxsize=Config.MAX_QUEUE_SIZE)
 
-        self.model = NetworkVP(Config.DEVICE, Config.NETWORK_NAME, Config.NUM_ACTIONS)
+        self.model = NetworkVP(Config.DEVICE, Config.NETWORK_NAME, Config.NUM_ENLARGED_ACTIONS)
         if Config.LOAD_CHECKPOINT:
             self.stats.episode_count.value = self.model.load()
 

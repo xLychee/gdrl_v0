@@ -29,10 +29,12 @@ from multiprocessing import Process, Queue, Value
 
 import numpy as np
 import time
+import random
 
 from Config import Config
 from Environment import Environment
-from Experience import Experience
+from Experience import Experience, UpdatedExperience
+from collections import deque
 
 
 class ProcessAgent(Process):
@@ -46,27 +48,51 @@ class ProcessAgent(Process):
 
         self.env = Environment()
         #self.num_actions = self.env.get_num_actions()
-        self.num_actions = Config.NUM_ACTIONS
-        self.actions = np.arange(self.num_actions)
+        self.num_actions = Config.NUM_ENLARGED_ACTIONS
+        self.actions = Config.ENLARGED_ACTION_SET
 
         self.discount_factor = Config.DISCOUNT
         # one frame at a time
         self.wait_q = Queue(maxsize=1)
         self.exit_flag = Value('i', 0)
 
+        #### My Part
+        self.epsilon = 1.0
+        self.epsilon_decay = random.choice([0.99,0.995,0.95])
+        self.epsilon_min = 0.1
+
+        self.action_sequence = deque(maxlen=2)
+
     @staticmethod
-    def _accumulate_rewards(experiences, discount_factor, terminal_reward):
-        reward_sum = terminal_reward
+    def _accumulate_rewards(experiences, discount_factor, value, done):
+        reward_sum = 0 if done else value
+        return_list = []
+        if done:
+            for acs in Config.ENLARGED_ACTION_SET:
+                if acs[0] == experiences[-1].action:
+                    action_index = Config.ACTION_INDEX_MAP[acs]
+                    r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+                    uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
+                    return_list.append(uexp)
+                    print(acs, action_index, experiences[-1].prediction, r)
+        action_sequence = ()
         for t in reversed(range(0, len(experiences)-1)):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+            action = experiences[t].action
+            action_sequence = (action,) + action_sequence
+            if action_sequence not in Config.ENLARGED_ACTION_SET:
+                break
+            action_index = Config.ACTION_INDEX_MAP[action_sequence]
             reward_sum = discount_factor * reward_sum + r
-            experiences[t].reward = reward_sum
-        return experiences[:-1]
+            uexp = UpdatedExperience(experiences[t].state, action_index, experiences[t].prediction, reward_sum)
+            return_list.append(uexp)
+            print(action_sequence, action_index, experiences[t].prediction, r)
+        return return_list
 
-    def convert_data(self, experiences):
-        x_ = np.array([exp.state for exp in experiences])
-        a_ = np.eye(self.num_actions)[np.array([exp.action for exp in experiences])].astype(np.float32)
-        r_ = np.array([exp.reward for exp in experiences])
+    def convert_data(self, updated_experiences):
+        x_ = np.array([exp.state for exp in updated_experiences])
+        a_ = np.eye(self.num_actions)[np.array([exp.action_index for exp in updated_experiences])].astype(np.float32)
+        r_ = np.array([exp.reward for exp in updated_experiences])
         return x_, r_, a_
 
     def predict(self, state):
@@ -77,11 +103,23 @@ class ProcessAgent(Process):
         return p, v
 
     def select_action(self, prediction):
+        if self.action_sequence:
+            return self.action_sequence.popleft()
         if Config.PLAY_MODE:
-            action = np.argmax(prediction)
+            action_index = np.argmax(prediction)
+            action_set = Config.ACTION_INDEX_MAP[action_index]
+            for a in action_set:
+                self.action_sequence.append(a)
         else:
-            action = np.random.choice(self.actions, p=prediction)
-        return action
+            if np.random.rand() <= self.epsilon:
+                self.action_sequence.append(np.random.choice(Config.BASIC_ACTION_SET))
+            else:
+                action_index = np.random.choice(self.actions, p=prediction)
+                action_set = Config.ACTION_INDEX_MAP[action_index]
+                for a in action_set:
+                    self.action_sequence.append(a)
+        print("epsilon: {}, action sequence: {}".format(self.epsilon,self.action_sequence))
+        return self.action_sequence.popleft()
 
     def run_episode(self):
         self.env.reset()
@@ -90,6 +128,9 @@ class ProcessAgent(Process):
 
         time_count = 0
         reward_sum = 0.0
+
+        experience_queue = deque(maxlen=10)
+        updated_exps = []
 
         while not done:
             # very first few frames
@@ -102,22 +143,26 @@ class ProcessAgent(Process):
             reward, done = self.env.step(action)
             reward_sum += reward
             exp = Experience(self.env.previous_state, action, prediction, reward, done)
-            experiences.append(exp)
+            #experiences.append(exp)
+            experience_queue.append(exp)
+            updated_exps += ProcessAgent._accumulate_rewards(experience_queue, self.discount_factor, value, done)
 
-            if done or time_count == Config.TIME_MAX:
-                terminal_reward = 0 if done else value
-
-                updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
+            if (done or time_count == Config.TIME_MAX) and updated_exps:
+                #terminal_reward = 0 if done else value
+                #updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
                 x_, r_, a_ = self.convert_data(updated_exps)
                 yield x_, r_, a_, reward_sum
 
                 # reset the tmax count
                 time_count = 0
                 # keep the last experience for the next batch
-                experiences = [experiences[-1]]
+                #experiences = [experiences[-1]]
                 reward_sum = 0.0
 
+            updated_exps = []
             time_count += 1
+        if self.epsilon>self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
     def run(self):
         # randomly sleep up to 1 second. helps agents boot smoothly.

@@ -145,8 +145,8 @@ class Config:
     USE_LOG_SOFTMAX = False
 
     #########################################################################
-    ACTION_SET = [(1,), (2,), (3,)] #(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
-
+    BASIC_ACTION_SET = [1, 2, 3] #(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
+    ENLARGED_ACTION_SET = [(1,), (2,), (3,), (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
     def build_action_index_map(action_set):
         index = 0
         result = {}
@@ -156,5 +156,5 @@ class Config:
             index += 1
         return result
 
-    NUM_ACTIONS = len(ACTION_SET)
-    ACTION_INDEX_MAP = build_action_index_map(ACTION_SET)
+    NUM_ENLARGED_ACTIONS = len(ENLARGED_ACTION_SET)
+    ACTION_INDEX_MAP = build_action_index_map(ENLARGED_ACTION_SET)
