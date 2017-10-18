@@ -163,8 +163,8 @@ class ProcessAgent(Process):
                 # keep the last experience for the next batch
                 #experiences = [experiences[-1]]
                 reward_sum = 0.0
+                updated_exps = []
 
-            updated_exps = []
             time_count += 1
         if self.epsilon>self.epsilon_min:
             self.epsilon *= self.epsilon_decay
