@@ -85,9 +85,8 @@ class ProcessAgent(Process):
             reward_sum = discount_factor * reward_sum + r
             uexp = UpdatedExperience(experiences[t].state, action_index, experiences[t].prediction, reward_sum)
             return_list.append(uexp)
-            if np.random.rand() < 0.0001:
+            if True: #np.random.rand() < 0.0001:
                 print(action_sequence, action_index, experiences[t].prediction, reward_sum)
-        print(len(return_list))
         return return_list
 
     def convert_data(self, updated_experiences):
