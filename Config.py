@@ -33,8 +33,7 @@ class Config:
     # Game configuration
 
     # Name of the game, with version (e.g. PongDeterministic-v0)
-    #ATARI_GAME = 'PongDeterministic-v0'
-    ATARI_GAME = 'Pong-v0'
+    ATARI_GAME = 'PongDeterministic-v0'
 
     # Enable to see the trained agent in action
     PLAY_MODE = False
