@@ -57,7 +57,7 @@ class ProcessAgent(Process):
 
         #### My Part
         self.epsilon = 1.0
-        self.epsilon_decay = np.choice([0.99,0.995,0.95])
+        self.epsilon_decay = np.random.choice([0.99,0.995,0.95])
         self.epsilon_min = 0.1
 
         self.action_sequence = deque(maxlen=2)
