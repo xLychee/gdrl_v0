@@ -86,6 +86,8 @@ class ThreadDynamicAdjustment(Thread):
         self.server.stats.agent_count.value = self.agent_count
 
     def run(self):
+
+        return
         self.enable_disable_components()
         self.update_stats()
 
@@ -94,7 +96,6 @@ class ThreadDynamicAdjustment(Thread):
 
         # Wait for initialization
         time.sleep(Config.DYNAMIC_SETTINGS_INITIAL_WAIT)
-
         while not self.exit_flag:
             old_trainer_count, old_predictor_count, old_agent_count = \
                 self.trainer_count, self.predictor_count, self.agent_count
