@@ -45,7 +45,8 @@ class ProcessAgent(Process):
         self.episode_log_q = episode_log_q
 
         self.env = Environment()
-        self.num_actions = self.env.get_num_actions()
+        #self.num_actions = self.env.get_num_actions()
+        self.num_actions = Config.NUM_ACTIONS
         self.actions = np.arange(self.num_actions)
 
         self.discount_factor = Config.DISCOUNT
