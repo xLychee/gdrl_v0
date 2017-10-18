@@ -48,7 +48,7 @@ class ProcessAgent(Process):
         self.env = Environment()
         #self.num_actions = self.env.get_num_actions()
         self.num_actions = Config.NUM_ENLARGED_ACTIONS
-        self.actions = Config.ENLARGED_ACTION_SET
+        #self.actions = Config.ENLARGED_ACTION_SET
 
         self.discount_factor = Config.DISCOUNT
         # one frame at a time
@@ -115,7 +115,7 @@ class ProcessAgent(Process):
             if np.random.rand() <= self.epsilon:
                 self.action_sequence.append(np.random.choice(Config.BASIC_ACTION_SET))
             else:
-                action_index = np.random.choice(self.actions, p=prediction)
+                action_index = np.random.choice(range(self.num_actions), p=prediction)
                 action_set = Config.ACTION_INDEX_MAP[action_index]
                 if not isinstance(action_set, tuple):
                     print(action_index, action_set)
