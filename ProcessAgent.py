@@ -73,8 +73,7 @@ class ProcessAgent(Process):
                     r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                     uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
                     return_list.append(uexp)
-                    if np.random.rand()<0.0001:
-                        print(acs, action_index, experiences[-1].prediction, r)
+                    print("done:",acs, action_index, experiences[-1].prediction, r)
         action_sequence = ()
         for t in reversed(range(0, len(experiences))):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
