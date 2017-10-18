@@ -68,7 +68,7 @@ class ProcessAgent(Process):
         return_list = []
         if done:
             for acs in Config.ENLARGED_ACTION_SET:
-                if acs[0] == experiences[-1].action:
+                if len(acs)>1 and acs[0] == experiences[-1].action:
                     action_index = Config.ACTION_INDEX_MAP[acs]
                     r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                     uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
