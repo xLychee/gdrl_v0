@@ -82,6 +82,9 @@ class Environment:
         self.previous_state = self.current_state = None
 
     def step(self, action):
+        #####
+        action = Config.ACTION_INDEX_MAP[action][0]
+        #####
         observation, reward, done, _ = self.game.step(action)
 
         self.total_reward += reward

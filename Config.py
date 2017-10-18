@@ -25,7 +25,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class Config:
-
     #########################################################################
     # Game configuration
 
@@ -39,14 +38,14 @@ class Config:
     # Load old models. Throws if the model doesn't exist
     LOAD_CHECKPOINT = False
     # If 0, the latest checkpoint is loaded
-    LOAD_EPISODE = 0 
+    LOAD_EPISODE = 0
 
     #########################################################################
     # Number of agents, predictors, trainers and other system settings
-    
+
     # If the dynamic configuration is on, these are the initial values.
     # Number of Agents
-    AGENTS = 32 
+    AGENTS = 32
     # Number of Predictors
     PREDICTORS = 2
     # Number of Trainers
@@ -65,10 +64,10 @@ class Config:
 
     # Discount factor
     DISCOUNT = 0.99
-    
+
     # Tmax
     TIME_MAX = 5
-    
+
     # Reward Clipping
     REWARD_MIN = -1
     REWARD_MAX = 1
@@ -101,15 +100,15 @@ class Config:
 
     # Dual RMSProp - we found that using a single RMSProp for the two cost function works better and faster
     DUAL_RMSPROP = False
-    
+
     # Gradient clipping
     USE_GRAD_CLIP = False
-    GRAD_CLIP_NORM = 40.0 
+    GRAD_CLIP_NORM = 40.0
     # Epsilon (regularize policy lag in GA3C)
     LOG_EPSILON = 1e-6
     # Training min batch size - increasing the batch size increases the stability of the algorithm, but make learning slower
     TRAINING_MIN_BATCH_SIZE = 0
-    
+
     #########################################################################
     # Log and save
 
@@ -122,7 +121,7 @@ class Config:
     SAVE_MODELS = True
     # Save every SAVE_FREQUENCY episodes
     SAVE_FREQUENCY = 1000
-    
+
     # Print stats every PRINT_STATS_FREQUENCY episodes
     PRINT_STATS_FREQUENCY = 1
     # The window to average stats
@@ -135,8 +134,23 @@ class Config:
 
     #########################################################################
     # More experimental parameters here
-    
+
     # Minimum policy
     MIN_POLICY = 0.0
     # Use log_softmax() instead of log(softmax())
     USE_LOG_SOFTMAX = False
+
+    #########################################################################
+    ACTION_SET = [(1,), (2,), (3,)] #(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
+
+    def build_action_index_map(action_set):
+        index = 0
+        result = {}
+        for a in action_set:
+            result[a] = index
+            result[index] = a
+            index += 1
+        return result
+
+    NUM_ACTIONS = len(ACTION_SET)
+    ACTION_INDEX_MAP = build_action_index_map(ACTION_SET)
