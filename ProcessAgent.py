@@ -74,7 +74,8 @@ class ProcessAgent(Process):
                     r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                     uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
                     return_list.append(uexp)
-                    print(acs, action_index, experiences[-1].prediction, r)
+                    if random.rand()<0.0001:
+                        print(acs, action_index, experiences[-1].prediction, r)
         action_sequence = ()
         for t in reversed(range(0, len(experiences)-1)):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
@@ -86,7 +87,8 @@ class ProcessAgent(Process):
             reward_sum = discount_factor * reward_sum + r
             uexp = UpdatedExperience(experiences[t].state, action_index, experiences[t].prediction, reward_sum)
             return_list.append(uexp)
-            print(action_sequence, action_index, experiences[t].prediction, r)
+            if random.rand() < 0.0001:
+                print(action_sequence, action_index, experiences[t].prediction, r)
         return return_list
 
     def convert_data(self, updated_experiences):
@@ -118,7 +120,8 @@ class ProcessAgent(Process):
                 action_set = Config.ACTION_INDEX_MAP[action_index]
                 for a in action_set:
                     self.action_sequence.append(a)
-        print("epsilon: {}, action sequence: {}".format(self.epsilon,self.action_sequence))
+        if random.rand()<0.0001:
+            print("epsilon: {}, action sequence: {}".format(self.epsilon,self.action_sequence))
         return self.action_sequence.popleft()
 
     def run_episode(self):
