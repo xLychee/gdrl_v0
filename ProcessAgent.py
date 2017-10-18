@@ -117,6 +117,7 @@ class ProcessAgent(Process):
             else:
                 action_index = np.random.choice(self.actions, p=prediction)
                 action_set = Config.ACTION_INDEX_MAP[action_index]
+                assert isinstance(action_set, tuple)
                 for a in action_set:
                     self.action_sequence.append(a)
         if np.random.rand()<0.0001:
