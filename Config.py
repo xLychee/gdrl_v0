@@ -24,6 +24,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
+
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -35,8 +36,8 @@ class Config:
     # Name of the game, with version (e.g. PongDeterministic-v0)
 
 
-    #ATARI_GAME = 'PongDeterministic-v0'
-    ATARI_GAME = 'BreakoutDeterministic-v0'
+    # ATARI_GAME = 'PongDeterministic-v0'
+    ATARI_GAME = 'QbertDeterministic-v0'
 
     # Enable to see the trained agent in action
     PLAY_MODE = False
@@ -148,8 +149,15 @@ class Config:
     USE_LOG_SOFTMAX = False
 
     #########################################################################
-    BASIC_ACTION_SET = [1, 2, 3] #(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
-    ENLARGED_ACTION_SET = [(1,), (2,), (3,), (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
+    BASIC_ACTION_SET = [0, 1, 2, 3, 4, 5]  # (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
+    ENLARGED_ACTION_SET = [(0,), (1,), (2,), (3,), (4,), (5,),
+                           (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5),
+                           (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
+                           (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5),
+                           (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5),
+                           (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5),
+                           (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5)]
+
     def build_action_index_map(action_set):
         index = 0
         result = {}
