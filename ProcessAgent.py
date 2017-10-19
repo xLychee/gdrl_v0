@@ -65,6 +65,8 @@ class ProcessAgent(Process):
     @staticmethod
     def _accumulate_rewards(experiences, discount_factor, value, done):
         return_list = []
+        if not done and len(experiences) < 5:
+            return []
         if done:
             for acs in Config.ENLARGED_ACTION_SET:
                 if acs[0] == experiences[-1].action:
@@ -73,9 +75,17 @@ class ProcessAgent(Process):
                     uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
                     return_list.append(uexp)
                     #print("done:",acs, action_index, experiences[-1].prediction, r)
-        reward_sum = experiences[-1].reward if done else value
+            reward_sum = experiences[-1].reward
+            last_index = len(experiences)-1
+        else:
+            reward_sum = value
+            last_index = len(experiences) - 4
+            for t in reversed(range(last_index,len(experiences)-1)):
+                r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+                reward_sum = discount_factor * reward_sum + r
+
         action_sequence = ()
-        for t in reversed(range(0, len(experiences)-1)):
+        for t in reversed(range(0, last_index)):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
             action = experiences[t].action
             action_sequence = (action,) + action_sequence
