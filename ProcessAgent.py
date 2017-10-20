@@ -77,7 +77,7 @@ class ProcessAgent(Process):
                     # print("done:",acs, action_index, experiences[-1].prediction, r)
             reward_sum = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
             last_index = len(experiences) - Config.LOOK_AHEAD_STEPS - 1
-            action_sequence = (experiences[-1].action)
+            action_sequence = (experiences[-1].action,)
             for t in reversed(range(last_index, len(experiences) - 1)):
                 action_sequence = (experiences[t].action,) + action_sequence
                 r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
