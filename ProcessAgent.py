@@ -75,6 +75,7 @@ class ProcessAgent(Process):
                     uexp = UpdatedExperience(experiences[-1].state, action_index, r)
                     return_list.append(uexp)
                     # print("done:",acs, action_index, experiences[-1].prediction, r)
+            print("Done, length of return list1:", len(return_list))
             reward_sum = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
             last_index = len(experiences) - Config.LOOK_AHEAD_STEPS - 1
             action_sequence = (experiences[-1].action,)
@@ -87,6 +88,7 @@ class ProcessAgent(Process):
                         action_index = Config.ACTION_INDEX_MAP[action_sequence[:i]]
                         uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
                         return_list.append(uexp)
+            print("Done, length of return list2:", len(return_list))
             t = last_index - 1
             if t >= 0:
                 r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
@@ -95,7 +97,7 @@ class ProcessAgent(Process):
                 action_index = Config.ACTION_INDEX_MAP[action_sequence]
                 uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
                 return_list.append(uexp)
-            print("Done, length of return list:", len(return_list))
+            print("Done, length of return list3:", len(return_list))
             return return_list
 
         reward_sum = value
