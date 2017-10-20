@@ -37,8 +37,8 @@ class Config:
 
 
     # ATARI_GAME = 'PongDeterministic-v0'
-    # ATARI_GAME = 'QbertDeterministic-v0'
-    ATARI_GAME = 'BreakoutDeterministic-v0'
+    ATARI_GAME = 'QbertDeterministic-v0'
+    # ATARI_GAME = 'BreakoutDeterministic-v0'
 
     # Enable to see the trained agent in action
     PLAY_MODE = False
@@ -150,7 +150,7 @@ class Config:
     USE_LOG_SOFTMAX = False
 
     #########################################################################
-    '''
+
     BASIC_ACTION_SET = [0, 1, 2, 3, 4, 5]  # (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
     ENLARGED_ACTION_SET = [(0,), (1,), (2,), (3,), (4,), (5,),
                            (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5),
@@ -166,6 +166,7 @@ class Config:
                            (1, 0), (1, 1), (1, 2), (1, 3),
                            (2, 0), (2, 1), (2, 2), (2, 3),
                            (3, 0), (3, 1), (3, 2), (3, 3)]
+    '''
 
     def build_action_index_map(action_set):
         index = 0
