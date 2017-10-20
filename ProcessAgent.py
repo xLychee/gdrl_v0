@@ -73,8 +73,7 @@ class ProcessAgent(Process):
                     action_index = Config.ACTION_INDEX_MAP[acs]
                     r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                     uexp = UpdatedExperience(experiences[-1].state, action_index, r)
-                    print("update experience {} with action {} and reward {}".format(len(experiences)-1,
-                          acs, r))
+                    #print("update experience {} with action {} and reward {}".format(len(experiences)-1,acs, r))
                     return_list.append(uexp)
                     # print("done:",acs, action_index, experiences[-1].prediction, r)
             #print("Done, length of return list1:", len(return_list))
@@ -89,8 +88,8 @@ class ProcessAgent(Process):
                     if action_sequence[:i] in Config.ENLARGED_ACTION_SET:
                         action_index = Config.ACTION_INDEX_MAP[action_sequence[:i]]
                         uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
-                        print("update experience {} with action {} and reward {}".format(t,
-                                                                                         action_sequence[:i], reward_sum))
+                        #print("update experience {} with action {} and reward {}".format(t,
+                        #                                                                 action_sequence[:i], reward_sum))
                         return_list.append(uexp)
             #print("Done, length of return list2:", len(return_list))
             t = last_index - 1
@@ -101,8 +100,8 @@ class ProcessAgent(Process):
                 action_index = Config.ACTION_INDEX_MAP[action_sequence]
                 uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
                 return_list.append(uexp)
-                print("update experience {} with action {} and reward {}".format(t,
-                                                                                 action_sequence, reward_sum))
+                #print("update experience {} with action {} and reward {}".format(t,
+                #                                                                 action_sequence, reward_sum))
 
             #print("Done, length of return list3:", len(return_list))
             return return_list
