@@ -179,3 +179,5 @@ class Config:
 
     NUM_ENLARGED_ACTIONS = len(ENLARGED_ACTION_SET)
     ACTION_INDEX_MAP = build_action_index_map(ENLARGED_ACTION_SET)
+
+    LOOK_AHEAD_STEPS = 4

@@ -46,9 +46,9 @@ class ProcessAgent(Process):
         self.episode_log_q = episode_log_q
 
         self.env = Environment()
-        #self.num_actions = self.env.get_num_actions()
+        # self.num_actions = self.env.get_num_actions()
         self.num_actions = Config.NUM_ENLARGED_ACTIONS
-        #self.actions = Config.ENLARGED_ACTION_SET
+        # self.actions = Config.ENLARGED_ACTION_SET
 
         self.discount_factor = Config.DISCOUNT
         # one frame at a time
@@ -57,7 +57,7 @@ class ProcessAgent(Process):
 
         #### My Part
         self.epsilon = 0.0
-        self.epsilon_decay = np.random.choice([0.99,0.995,0.95])
+        self.epsilon_decay = np.random.choice([0.99, 0.995, 0.95])
         self.epsilon_min = 0.1
 
         self.action_sequence = deque(maxlen=2)
@@ -72,17 +72,37 @@ class ProcessAgent(Process):
                 if acs[0] == experiences[-1].action:
                     action_index = Config.ACTION_INDEX_MAP[acs]
                     r = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
-                    uexp = UpdatedExperience(experiences[-1].state, action_index, experiences[-1].prediction, r)
+                    uexp = UpdatedExperience(experiences[-1].state, action_index, r)
                     return_list.append(uexp)
-                    #print("done:",acs, action_index, experiences[-1].prediction, r)
-            reward_sum = experiences[-1].reward
-            last_index = len(experiences)-1
-        else:
-            reward_sum = value
-            last_index = len(experiences) - 4
-            for t in reversed(range(last_index,len(experiences)-1)):
+                    # print("done:",acs, action_index, experiences[-1].prediction, r)
+            reward_sum = np.clip(experiences[-1].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+            last_index = len(experiences) - Config.LOOK_AHEAD_STEPS - 1
+            action_sequence = (experiences[-1].action)
+            for t in reversed(range(last_index, len(experiences) - 1)):
+                action_sequence = (experiences[t].action,) + action_sequence
                 r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                 reward_sum = discount_factor * reward_sum + r
+                for i in range(1, len(action_sequence) + 1):
+                    if action_sequence[:i] in Config.ENLARGED_ACTION_SET:
+                        action_index = Config.ACTION_INDEX_MAP[action_sequence[:i]]
+                        uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
+                        return_list.append(uexp)
+            t = last_index - 1
+            if t >= 0:
+                r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+                reward_sum = discount_factor * reward_sum + r
+                action_sequence = (experiences[t].action, experiences[t + 1].action)
+                action_index = Config.ACTION_INDEX_MAP[action_sequence]
+                uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
+                return_list.append(uexp)
+            print("Done, length of return list:", len(return_list))
+            return return_list
+
+        reward_sum = value
+        last_index = len(experiences) - Config.LOOK_AHEAD_STEPS
+        for t in reversed(range(last_index, len(experiences) - 1)):
+            r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
+            reward_sum = discount_factor * reward_sum + r
 
         action_sequence = ()
         for t in reversed(range(0, last_index)):
@@ -93,9 +113,9 @@ class ProcessAgent(Process):
                 break
             action_index = Config.ACTION_INDEX_MAP[action_sequence]
             reward_sum = discount_factor * reward_sum + r
-            uexp = UpdatedExperience(experiences[t].state, action_index, experiences[t].prediction, reward_sum)
+            uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
             return_list.append(uexp)
-            if  np.random.rand() < 0.0001:
+            if np.random.rand() < 0.0001:
                 print(action_sequence, action_index, experiences[t].prediction, reward_sum)
         return return_list
 
@@ -131,8 +151,8 @@ class ProcessAgent(Process):
                 assert isinstance(action_set, tuple)
                 for a in action_set:
                     self.action_sequence.append(a)
-        if np.random.rand()<0.0001:
-            print("epsilon: {}, action sequence: {}".format(self.epsilon,self.action_sequence))
+        if np.random.rand() < 0.0001:
+            print("epsilon: {}, action sequence: {}".format(self.epsilon, self.action_sequence))
         return self.action_sequence.popleft()
 
     def run_episode(self):
@@ -157,25 +177,25 @@ class ProcessAgent(Process):
             reward, done = self.env.step(action)
             reward_sum += reward
             exp = Experience(self.env.previous_state, action, prediction, reward, done)
-            #experiences.append(exp)
+            # experiences.append(exp)
             experience_queue.append(exp)
             updated_exps += ProcessAgent._accumulate_rewards(experience_queue, self.discount_factor, value, done)
 
             if (done or time_count == Config.TIME_MAX) and updated_exps:
-                #terminal_reward = 0 if done else value
-                #updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
+                # terminal_reward = 0 if done else value
+                # updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
                 x_, r_, a_ = self.convert_data(updated_exps)
                 yield x_, r_, a_, reward_sum
 
                 # reset the tmax count
                 time_count = 0
                 # keep the last experience for the next batch
-                #experiences = [experiences[-1]]
+                # experiences = [experiences[-1]]
                 reward_sum = 0.0
                 updated_exps = []
 
             time_count += 1
-        if self.epsilon>self.epsilon_min:
+        if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
     def run(self):
