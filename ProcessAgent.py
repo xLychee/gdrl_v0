@@ -118,7 +118,7 @@ class ProcessAgent(Process):
             uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
             return_list.append(uexp)
             if np.random.rand() < 0.0001:
-                print(action_sequence, action_index, experiences[t].prediction, reward_sum)
+                print("len of return:",len(return_list), action_sequence, action_index, experiences[t].prediction, reward_sum)
         return return_list
 
     def convert_data(self, updated_experiences):
