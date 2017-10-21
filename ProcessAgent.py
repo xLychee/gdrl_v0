@@ -97,9 +97,10 @@ class ProcessAgent(Process):
                 r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
                 reward_sum = discount_factor * reward_sum + r
                 action_sequence = (experiences[t].action, experiences[t + 1].action)
-                action_index = Config.ACTION_INDEX_MAP[action_sequence]
-                uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
-                return_list.append(uexp)
+                if action_sequence in Config.ENLARGED_ACTION_SET:
+                    action_index = Config.ACTION_INDEX_MAP[action_sequence]
+                    uexp = UpdatedExperience(experiences[t].state, action_index, reward_sum)
+                    return_list.append(uexp)
                 #print("update experience {} with action {} and reward {}".format(t,
                 #                                                                 action_sequence, reward_sum))
 
