@@ -56,9 +56,9 @@ class ProcessAgent(Process):
         self.exit_flag = Value('i', 0)
 
         #### My Part
-        self.epsilon = 0.0
-        self.epsilon_decay = np.random.choice([0.99, 0.995, 0.95])
-        self.epsilon_min = 0.1
+        self.epsilon = 0.1
+        self.epsilon_decay = 0.99 #np.random.choice([0.99, 0.995, 0.95])
+        self.epsilon_min = np.choice([0.1,0.01])
 
         self.action_sequence = deque(maxlen=2)
 
