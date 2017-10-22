@@ -37,8 +37,8 @@ class Config:
 
 
     # ATARI_GAME = 'PongDeterministic-v0'
-    # ATARI_GAME = 'QbertDeterministic-v0'
-    ATARI_GAME = 'BreakoutDeterministic-v0'
+    ATARI_GAME = 'QbertDeterministic-v0'
+    # ATARI_GAME = 'BreakoutDeterministic-v0'
 
     # Enable to see the trained agent in action
     PLAY_MODE = False
