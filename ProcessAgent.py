@@ -65,7 +65,7 @@ class ProcessAgent(Process):
     @staticmethod
     def _accumulate_rewards(experiences, discount_factor, value, done):
         return_list = []
-        if not done and len(experiences) < 5:
+        if not done and len(experiences) < Config.LOOK_AHEAD_STEPS+1:
             return []
         if done:
             for acs in Config.ENLARGED_ACTION_SET:
@@ -107,9 +107,13 @@ class ProcessAgent(Process):
             #print("Done, length of return list3:", len(return_list))
             return return_list
 
-        reward_sum = value
         last_index = len(experiences) - Config.LOOK_AHEAD_STEPS
-        for t in reversed(range(last_index, len(experiences) - 1)):
+        assert last_index > 0
+        value_index = np.random.choice(range(last_index+1,len(experiences)))
+        assert value_index > last_index and value_index < len(experiences)
+        reward_sum = experiences[value_index].value
+        #last_index = len(experiences) - Config.LOOK_AHEAD_STEPS
+        for t in reversed(range(last_index, value_index)):
             r = np.clip(experiences[t].reward, Config.REWARD_MIN, Config.REWARD_MAX)
             reward_sum = discount_factor * reward_sum + r
 
@@ -167,7 +171,7 @@ class ProcessAgent(Process):
     def run_episode(self):
         self.env.reset()
         done = False
-        experiences = []
+        #experiences = []
 
         time_count = 0
         reward_sum = 0.0
@@ -185,7 +189,7 @@ class ProcessAgent(Process):
             action = self.select_action(prediction)
             reward, done = self.env.step(action)
             reward_sum += reward
-            exp = Experience(self.env.previous_state, action, prediction, reward, done)
+            exp = Experience(self.env.previous_state, action, prediction, value, reward, done)
             # experiences.append(exp)
             experience_queue.append(exp)
             updated_exps += ProcessAgent._accumulate_rewards(experience_queue, self.discount_factor, value, done)
