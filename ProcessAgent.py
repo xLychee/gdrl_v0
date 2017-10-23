@@ -56,7 +56,7 @@ class ProcessAgent(Process):
         self.exit_flag = Value('i', 0)
 
         #### My Part
-        self.epsilon = 0.1
+        self.epsilon = 0.0
         self.epsilon_decay = 0.99 #np.random.choice([0.99, 0.995, 0.95])
         self.epsilon_min = np.random.choice([0.1,0.01])
 
@@ -109,7 +109,7 @@ class ProcessAgent(Process):
 
         last_index = len(experiences) - Config.LOOK_AHEAD_STEPS
         assert last_index > 0
-        value_index = np.random.choice(range(last_index+1,len(experiences)))
+        value_index = len(experiences) - 1#np.random.choice(range(last_index+1,len(experiences)))
         assert value_index > last_index and value_index < len(experiences)
         reward_sum = experiences[value_index].value
         #last_index = len(experiences) - Config.LOOK_AHEAD_STEPS
@@ -193,13 +193,13 @@ class ProcessAgent(Process):
             # experiences.append(exp)
             experience_queue.append(exp)
             updated_exps += ProcessAgent._accumulate_rewards(experience_queue, self.discount_factor, value, done)
-            print(len(updated_exps))
+            #print(len(updated_exps))
             if (done or time_count == Config.TIME_MAX) and updated_exps:
                 # terminal_reward = 0 if done else value
                 # updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
                 x_, r_, a_ = self.convert_data(updated_exps)
                 yield x_, r_, a_, reward_sum
-                print("here: len(updated_exps): ", len(updated_exps))
+                #print("here: len(updated_exps): ", len(updated_exps))
                 # reset the tmax count
                 time_count = 0
                 # keep the last experience for the next batch
