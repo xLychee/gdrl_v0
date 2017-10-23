@@ -199,7 +199,7 @@ class ProcessAgent(Process):
                 # updated_exps = ProcessAgent._accumulate_rewards(experiences, self.discount_factor, terminal_reward)
                 x_, r_, a_ = self.convert_data(updated_exps)
                 yield x_, r_, a_, reward_sum
-
+                print("here: len(updated_exps): ", len(updated_exps))
                 # reset the tmax count
                 time_count = 0
                 # keep the last experience for the next batch
