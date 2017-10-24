@@ -139,7 +139,7 @@ class Config:
     STAT_ROLLING_MEAN_WINDOW = 1000
 
     # Results filename
-    RESULTS_FILENAME = 'breakout_new_2.txt'
+    RESULTS_FILENAME = 'qbert_clip_10.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
