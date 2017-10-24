@@ -114,11 +114,11 @@ class Config:
 
     # Gradient clipping
     USE_GRAD_CLIP = True
-    GRAD_CLIP_NORM = 5.0
+    GRAD_CLIP_NORM = 10.0
     # Epsilon (regularize policy lag in GA3C)
     LOG_EPSILON = 1e-6
     # Training min batch size - increasing the batch size increases the stability of the algorithm, but make learning slower
-    TRAINING_MIN_BATCH_SIZE = 10
+    TRAINING_MIN_BATCH_SIZE = 40
 
     #########################################################################
     # Log and save
