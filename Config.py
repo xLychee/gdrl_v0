@@ -24,6 +24,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
+import gym
+from itertools import product
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -37,8 +39,8 @@ class Config:
 
 
     # ATARI_GAME = 'PongDeterministic-v0'
-    # ATARI_GAME = 'QbertDeterministic-v0'
-    ATARI_GAME = 'BreakoutDeterministic-v0'
+    ATARI_GAME = 'QbertDeterministic-v0'
+    # ATARI_GAME = 'BreakoutDeterministic-v0'
 
     # Enable to see the trained agent in action
     PLAY_MODE = False
@@ -116,7 +118,7 @@ class Config:
     # Epsilon (regularize policy lag in GA3C)
     LOG_EPSILON = 1e-6
     # Training min batch size - increasing the batch size increases the stability of the algorithm, but make learning slower
-    TRAINING_MIN_BATCH_SIZE = 40
+    TRAINING_MIN_BATCH_SIZE = 10
 
     #########################################################################
     # Log and save
@@ -159,14 +161,17 @@ class Config:
                            (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5),
                            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5),
                            (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5)]
-    '''
+    
     BASIC_ACTION_SET = [0, 1, 2, 3]  # (1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (3, 3)]
     ENLARGED_ACTION_SET = [(0,), (1,), (2,), (3,),
                            (0, 0), (0, 1), (0, 2), (0, 3),
                            (1, 0), (1, 1), (1, 2), (1, 3),
                            (2, 0), (2, 1), (2, 2), (2, 3),
                            (3, 0), (3, 1), (3, 2), (3, 3)]
-
+    '''
+    env_temp = gym.make(ATARI_GAME)
+    BASIC_ACTION_SET = list(range(env_temp.action_space.n))
+    ENLARGED_ACTION_SET = [(itm,) for itm in BASIC_ACTION_SET] + list(product(BASIC_ACTION_SET, BASIC_ACTION_SET))
 
     def build_action_index_map(action_set):
         index = 0
