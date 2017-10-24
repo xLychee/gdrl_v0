@@ -137,7 +137,7 @@ class Config:
     STAT_ROLLING_MEAN_WINDOW = 1000
 
     # Results filename
-    RESULTS_FILENAME = 'results.txt'
+    RESULTS_FILENAME = 'breakout_new_2.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
