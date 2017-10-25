@@ -38,8 +38,8 @@ class Config:
     # Name of the game, with version (e.g. PongDeterministic-v0)
 
 
-    # ATARI_GAME = 'PongDeterministic-v0'
-    ATARI_GAME = 'QbertDeterministic-v0'
+    ATARI_GAME = 'PongDeterministic-v0'
+    # ATARI_GAME = 'QbertDeterministic-v0'
     # ATARI_GAME = 'BreakoutDeterministic-v0'
 
     # Enable to see the trained agent in action
@@ -139,7 +139,7 @@ class Config:
     STAT_ROLLING_MEAN_WINDOW = 1000
 
     # Results filename
-    RESULTS_FILENAME = 'qbert_clip_10.txt'
+    RESULTS_FILENAME = 'pong_new.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
