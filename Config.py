@@ -28,7 +28,7 @@ import gym
 from itertools import product
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 
 class Config:
@@ -38,8 +38,8 @@ class Config:
     # Name of the game, with version (e.g. PongDeterministic-v0)
 
 
-    ATARI_GAME = 'PongDeterministic-v0'
-    # ATARI_GAME = 'QbertDeterministic-v0'
+    # ATARI_GAME = 'PongDeterministic-v0'
+    ATARI_GAME = 'QbertDeterministic-v0'
     # ATARI_GAME = 'BreakoutDeterministic-v0'
 
     # Enable to see the trained agent in action
@@ -63,7 +63,7 @@ class Config:
     TRAINERS = 2
 
     # Device
-    DEVICE = 'gpu:0'
+    DEVICE = 'gpu:1'
 
     # Enable the dynamic adjustment (+ waiting time to start it)
     DYNAMIC_SETTINGS = True
@@ -118,7 +118,7 @@ class Config:
     # Epsilon (regularize policy lag in GA3C)
     LOG_EPSILON = 1e-6
     # Training min batch size - increasing the batch size increases the stability of the algorithm, but make learning slower
-    TRAINING_MIN_BATCH_SIZE = 20
+    TRAINING_MIN_BATCH_SIZE = 30
 
     #########################################################################
     # Log and save
@@ -139,7 +139,7 @@ class Config:
     STAT_ROLLING_MEAN_WINDOW = 1000
 
     # Results filename
-    RESULTS_FILENAME = 'pong_new.txt'
+    RESULTS_FILENAME = 'qbert_dep_a1.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
