@@ -28,7 +28,7 @@ import gym
 from itertools import product
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 class Config:
@@ -63,7 +63,7 @@ class Config:
     TRAINERS = 2
 
     # Device
-    DEVICE = 'gpu:1'
+    DEVICE = 'gpu:0'
 
     # Enable the dynamic adjustment (+ waiting time to start it)
     DYNAMIC_SETTINGS = True
@@ -139,7 +139,7 @@ class Config:
     STAT_ROLLING_MEAN_WINDOW = 1000
 
     # Results filename
-    RESULTS_FILENAME = 'qbert_dep_a1.txt'
+    RESULTS_FILENAME = 'qbert_dep_a2.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
