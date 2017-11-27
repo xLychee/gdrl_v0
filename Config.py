@@ -42,14 +42,22 @@ class Config:
     ATARI_GAME = 'QbertDeterministic-v0'
     # ATARI_GAME = 'BreakoutDeterministic-v0'
 
-    # Enable to see the trained agent in action
-    PLAY_MODE = False
-    # Enable to train
-    TRAIN_MODELS = True
+    # Device
+    DEVICE = 'gpu:0'
+
     # Load old models. Throws if the model doesn't exist
     LOAD_CHECKPOINT = False
     # If 0, the latest checkpoint is loaded
     LOAD_EPISODE = 0
+
+    # Results filename
+    RESULTS_FILENAME = 'qbert_dep_a2.txt'
+
+    #########################################################################
+    # Enable to see the trained agent in action
+    PLAY_MODE = False
+    # Enable to train
+    TRAIN_MODELS = True
 
     #########################################################################
     # Number of agents, predictors, trainers and other system settings
@@ -61,9 +69,6 @@ class Config:
     PREDICTORS = 2
     # Number of Trainers
     TRAINERS = 2
-
-    # Device
-    DEVICE = 'gpu:0'
 
     # Enable the dynamic adjustment (+ waiting time to start it)
     DYNAMIC_SETTINGS = True
@@ -138,8 +143,6 @@ class Config:
     # The window to average stats
     STAT_ROLLING_MEAN_WINDOW = 1000
 
-    # Results filename
-    RESULTS_FILENAME = 'qbert_dep_a2.txt'
     # Network checkpoint name
     NETWORK_NAME = 'network'
 
